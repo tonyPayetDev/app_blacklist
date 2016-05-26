@@ -185,17 +185,13 @@ REST_FRAMEWORK = {
 
 # Database
 # https://docs.djangoproject.com/en/1.6/ref/settings/#databases
-
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'runner',                      # Or path to database file if using sqlite3.
-        'USER': 'root',                      # Not used with sqlite3.
-        'PASSWORD': 'tony',                  # Not used with sqlite3.
-        'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
-        'PORT': '',                      # Set to empty string for default. Not used with sqlite3.
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
 
 
 
@@ -313,81 +309,4 @@ BOOTSTRAP3 = {
     'base_url': '/static/runner/bootstrap/'
 }
 
-# ##### CACHE
-USECACHE=True
 
-if USECACHE:
-    
-    if DEBUG:
-        CACHES = {
-        'default': {
-            'BACKEND': 'django.core.cache.backends.dummy.DummyCache',
-        }
-    }
-    else:
-        USEMEMCACHE=False
-        if USEMEMCACHE:
-            CACHES = {
-                'default': {
-                    'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
-                    'LOCATION': '127.0.0.1:11211',
-                }
-            }
-            
-        USEDBCACHE=True
-        if USEDBCACHE:
-            CACHES = {
-                'default': {
-                    'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
-                    'LOCATION': 'runner_cache_table',
-                }
-            }
-
-RESPONSE_CACHE_SECONDS=1200
-# ##### END CACHE
-
-#THUMBNAIL_KVSTORE = 'sorl.thumbnail.kvstores.redis_kvstore.KVStore'
-THUMBNAIL_DEBUG = DEBUG
-THUMBNAIL_ENGINE = 'sorl.thumbnail.engines.convert_engine.Engine'
-THUMBNAIL_HIGH_RESOLUTION = True
-THUMBNAIL_PROCESSORS = (
-    'easy_thumbnails.processors.colorspace',
-    'easy_thumbnails.processors.autocrop',
-    #'easy_thumbnails.processors.scale_and_crop',
-    'filer.thumbnail_processors.scale_and_crop_with_subject_location',
-    'easy_thumbnails.processors.filters',
-)
-FILER_DEBUG = True
-
-# ##### SEARCH SITE MOTOR
-# USEES FOR ELASTICSEARCH (run external serveur on port 9200)
-# Sinon utilisation du moteur whoosh (fichiers locaux sous app runner whoosh_index)
-USEES=False
-
-if not USEES:
-    import os
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.whoosh_backend.WhooshEngine',
-            'PATH': os.path.join(os.path.dirname(__file__), 'whoosh_index'),
-        },
-    }
-else:
-    from urlparse import urlparse
-    # Get your connection url from Searchly dashboard
-    es = urlparse('http://localhost:9200')
-    port = es.port or 80
- 
-    HAYSTACK_CONNECTIONS = {
-        'default': {
-            'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-            'URL': es.scheme + '://' + es.hostname + ':' + str(port),
-            'INDEX_NAME': 'runner',
-        },
-    }
- 
-    if es.username:
-        HAYSTACK_CONNECTIONS['default']['KWARGS'] = {"http_auth": es.username + ':' + es.password}
-
-HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
-# ##### END SEARCH MOTOR
