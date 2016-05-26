@@ -1,0 +1,266 @@
+
+{% load url from future %}
+{% load account_tags %}
+
+{% load i18n %}
+{% load staticfiles %}
+{% load auth %}
+
+</html>
+<head>
+
+    <title>nerim</title>	
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="../../favicon.ico">
+
+
+    <!-- css  -->
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/animate.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/bootstrap2.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/font-awesome.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/saiyan.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/dataTables.tableTools.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/dataTables.bootstrap.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/editor.bootstrap.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/dataTables.responsive.css" %}' />
+    <link rel="stylesheet" type="text/css" href='{% static "reselling/css/datepicker.css" %}' />
+
+    <!-- datatable -->
+    <script src='{% static "reselling/js/jquery-1.11.1.min.js" %}'></script>
+    <script src='{% static "reselling/js/jquery-ui.js" %}'></script>
+    <script src='{% static "reselling/js/bootstrap.min.js" %}'></script>
+    <script src='{% static "reselling/js/jquery.dataTables.min.js" %}'></script>
+    <script src='{% static "reselling/js/dataTables.responsive.js" %}'></script>
+    <script src='{% static "reselling/js/dataTables.tableTools.min.js" %}'></script>
+    <script src='{% static "reselling/js/dataTables.editor2.js" %}'></script>
+    <script src='{% static "reselling/js/dataTables.bootstrap.js" %}'></script>
+    <script src='{% static "reselling/js/editor.bootstrap.js" %}'></script>
+
+    <!-- myscriptT -->
+    <script src='{% static "reselling/js/config.js" %}'></script>
+    <script src='{% static "reselling/js/saiyan.js" %}'></script>
+
+    <!-- highcharts todo telecharger highcharts-->
+   <!-- highcharts todo telecharger highcharts-->
+    <script src='{% static "reselling/js/highcharts.js" %}'></script>
+    <script src='{% static "reselling/js/highcharts-3d.js" %}'></script>
+    <script src='{% static "reselling/js/exporting.js" %}'></script>
+
+
+</head>
+
+<body>
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div id="spinner">
+            <img src='{% static "reselling/images/logo_nerim.png" %}' alt="Loading..."/>
+        </div>
+
+        {% block bar %}
+
+        <div class="container-fluid">
+
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle  " data-toggle="collapse" data-target="#navbar" aria-expanded="true" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class='current navbar-brand' href='#'>
+                    <i class='icon-beer'></i>
+
+                    <a class="navbar-brand" href="#"></a>
+                </a>
+                <img class="nerimLogo" src='{% static "reselling/images/logo_nerim.png" %}' alt="pensées de Giverny" />
+            </div>
+
+            <div id="navbar"  class="collapse navbar-collapse">
+
+                <ul class="nav navbar-nav navbar-right">
+
+
+                    <form class="navbar-form navbar-right">
+                        {% block connexion %}
+                        {% if user.is_authenticated %}
+                        {% if user.is_superuser %}
+                        {% load admin_urls %}
+                        <input type="text" class="form-control" placeholder="Search...">
+                    </form>
+
+
+                    <ul class="nav navbar-inverse navbar-nav navbar-right">
+                        {% if request.user.is_authenticated %}
+                        <li class="dropdown">
+
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <i class='icon-user'></i>
+
+                                {% user_display request.user %}
+                                <img class="img-rounded" src="{% static 'reselling/images/777.gif' %}" />
+                                <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+
+                                <li><a href="{% url 'account_settings' %}"><i class="fa fa-user"></i> {% trans "Settings" %}</a></li>
+                                {% if request.user.is_staff %}
+                                <li ><a href="{% url THEME_ADMIN_URL|default:'admin:index' %}"><i class="fa fa-cog"></i> {% trans "Admin" %}</a></li>
+                                {% endif %}
+                                <li class="divider"></li>
+                                <li>
+                                    <a  data-toggle="modal" data-target="#myModal" ><i class="fa fa-power-off"></i> {% trans "Log out" %}</a>
+                                </li>
+
+                            </ul>
+                        </li>
+                        {% else %}
+                        <li><a href="{% url 'account_login' %}">{% trans "Log in" %}</a></li>
+                        {% if ACCOUNT_OPEN_SIGNUP %}
+                        <li><a href="{% url 'account_signup' %}">{% trans "Sign up" %}</a></li>
+                        {% endif %}
+                        {% endif %}
+                        {% endif %}
+                    </ul>
+
+                    <!--notif -->
+                    <li class="dropdown ">
+                        <a aria-expanded="true" class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-bell fa-fw"></i>  <i class="fa fa-caret-down"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-alerts">
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-comment fa-fw"></i> New Comment
+                                        <span class="pull-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-twitter fa-fw"></i> 3 New Followers
+                                        <span class="pull-right text-muted small">12 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-envelope fa-fw"></i> Message Sent
+                                        <span class="pull-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-tasks fa-fw"></i> New Task
+                                        <span class="pull-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a href="#">
+                                    <div>
+                                        <i class="fa fa-upload fa-fw"></i> Server Rebooted
+                                        <span class="pull-right text-muted small">4 minutes ago</span>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="divider"></li>
+                            <li>
+                                <a class="text-center" href="#">
+                                    <strong>See All Alerts</strong>
+                                    <i class="fa fa-angle-right"></i>
+                                </a>
+                            </li>
+                        </ul>
+                        <!-- /.dropdown-alerts -->
+                    </li>
+                    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <div class="modal-header">
+                                    <h4 class="modal-title"> {% trans "Log out" %}</h4>
+                                </div>
+
+                                <div class="modal-body">
+                                    <p>  {% trans "Etes-vous sûr de vouloir vous déconnecter?"%}</p>
+                                </div>
+
+
+                                <div class="modal-footer">
+                                    <form method="POST" action="{% url 'account_logout' %}">
+                                        <fieldset>
+                                            {% csrf_token %}
+                                            <button type="submit" class="btn btn-primary">{% trans "Log out" %}</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                        </fieldset>
+                                    </form>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% endblock %}
+                    </div>
+                </ul>
+        </div>
+        {% endblock %}
+    </nav>
+
+
+
+    <div class="col-lg-1">
+
+    </div>
+
+
+    <div class="container col-lg-10  ">
+
+        <div class="row row-offcanvas row-offcanvas-left">
+
+            <p class=" visible-xs">
+                <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="offcanvas">
+                    <span class="fa fa-th-list" aria-hidden="true"></span>
+                </button>
+            </p>
+            <p class=" visible-sm">
+                <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="offcanvas">
+                    <span class="fa fa-th-list" aria-hidden="true"></span>
+                </button>
+            </p>
+            <p class=" visible-md">
+                <button type="button" class="btn btn-default" aria-label="Left Align" data-toggle="offcanvas">
+                    <span class="fa fa-th-list" aria-hidden="true"></span>
+                </button>
+            </p>
+
+       
+
+            {% block menu %}
+
+
+
+            {% endblock %}
+
+            {% block content %}
+
+
+            {% endblock %}
+        </div>
+
+
+        </body>
+    </html>

@@ -1,0 +1,12 @@
+{% load staticfiles %}
+
+<script type="text/javascript" src="{% static "runner/js/jsoneditor.js" %}"></script>
+<script type="text/javascript" src="{% static "runner/js/asset/ace/ace.js" %}"></script>
+<script type="text/javascript" src="{% static "runner/js//asset/jsonlint/jsonlint.js" %}"></script>
+  
+<link rel="stylesheet" type="text/css" href="{% static "runner/css/jsoneditor.css" %}">
+
+<input type="hidden" id="{{ field_id }}" name="{{ field }}" />
+<div id="jsoneditor" style="width: 500px; height: 500px;"></div>
+
+

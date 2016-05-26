@@ -1,0 +1,423 @@
+{% extends 'reselling/base.html' %}
+
+{% load account_tags %}
+{% load i18n %}
+
+{% load staticfiles %}
+{% load site %}
+
+{% block extra_head %}
+
+<!-- css -->
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/bootstrap.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/monStyleT.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/style.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/css/font-awesome.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/animate.css" %}" />
+
+<!-- datatable -->
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/jquery.dataTables.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/dataTables.responsive.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/dataTables.editor.min.css" %}" />
+<link rel="stylesheet" type="text/css" href="{% static "reselling/css/dataTables.tableTools.css" %}" />
+
+
+
+// script js
+
+<script src="{% static "reselling/js/jquery-2.1.1.min.js" %}"></script>
+<script src="{% static "reselling/js/bootstrap.min.js" %}"></script>
+
+<!-- datatable -->
+<script src="{% static "reselling/js/jquery.dataTables.min.js" %}"></script>
+<script src="{% static "reselling/js/dataTables.responsive.js" %}"></script>
+<script src="{% static "reselling/js/dataTables.tableTools.min.js" %}"></script>
+<script src="{% static "reselling/js/dataTables.editor.js" %}"></script>
+
+<!-- my scripts -->
+<script src="{% static "reselling/js/generateScreen.js" %}"></script>
+<script src="{% static "reselling/js/myScript.js" %}"></script>
+
+
+{% endblock %}     
+
+{% block bar %}
+
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class='navbar-brand' href='#'>
+                <i class='icon-beer'></i>
+                {% current_domain %} 
+                <a class="navbar-brand" href="#"></a>
+            </a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+
+                {% block connexion %}
+                {% if user.is_authenticated %}
+                {% if user.is_superuser %}
+                {% load admin_urls %}
+                <form class="navbar-form navbar-right">
+                    <input type="text" class="form-control" placeholder="Search...">
+                </form>
+
+                <li >
+                    <a href="{% url 'admin:index' %}">Admin</a>
+                </li>
+                <ul class="nav navbar-default navbar-nav navbar-right">
+                    {% if request.user.is_authenticated %}
+                    <li class="dropdown">
+
+
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            <i class='icon-user'></i>
+
+                            {% user_display request.user %}
+                            <img class="img-rounded" src="http://placehold.it/20x20/ccc/777" />
+                            <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url "account_settings" %}"><i class="fa fa-user"></i> {% trans "Settings" %}</a></li>
+                            {% if request.user.is_staff %}
+                            <li ><a href="{% url THEME_ADMIN_URL|default:"admin:index" %}"><i class="fa fa-cog"></i> {% trans "Admin" %}</a></li>
+                            {% endif %}
+                            <li class="divider"></li>
+                            <li>
+                                <a class="deco" data-toggle="modal" data-target="#myModal" ><i class="fa fa-power-off"></i> {% trans "Log out" %}</a>
+                            </li>
+
+                        </ul>
+                    </li>
+                    {% else %}
+                    <li><a href="{% url "account_login" %}">{% trans "Log in" %}</a></li>
+                    {% if ACCOUNT_OPEN_SIGNUP %}
+                    <li><a href="{% url "account_signup" %}">{% trans "Sign up" %}</a></li>
+                    {% endif %}
+                    {% endif %}
+                    {% endif %}
+                </ul>
+
+
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+
+                            <div class="modal-header">
+                                <h4 class="modal-title"> {% trans "Log out" %}</h4>
+                            </div>
+
+                            <div class="modal-body">
+                                <p>  {% trans "Etes-vous sûr de vouloir vous déconnecter?"%}</p>
+                            </div>
+
+
+                            <div class="modal-footer">
+                                <form method="POST" action="{% url 'account_logout' %}">
+                                    <fieldset>
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">{% trans "Log out" %}</button>
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                    </fieldset>
+                                </form>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                </div>
+
+            {% endif %}
+
+            </ul>
+
+    </div>
+    </div>
+</nav>
+
+
+{% endblock %}
+
+{% endblock %}
+
+
+
+
+{% block content %}
+
+<div id="fullpage" class="fullpage-wrapper">
+
+    <div class="section" id="section1">
+        <div id='wrapper'>
+            <!-- Sidebar -->
+            <section id='sidebar'>
+                <i class='icon-align-justify icon-large' id='toggle'></i>
+                <ul id='dock'>
+                    <li class='active launcher'>
+                        <i class='fa fa-tachometer'></i>
+
+                    </li>
+                    <li class='launcher'>
+                        <i class='fa fa-shopping-cart'></i>
+                    </li>
+                    <li class='launcher'>
+                        <i class='fa fa-icon-table'></i>
+                        <a href="tables.html">Ventes</a>
+                    </li>
+                    <li class='launcher dropdown hover'>
+                        <i class='icon-flag'></i>
+                        <a href='#'>Travaux</a>
+                        <ul class='dropdown-menu'>
+                            <li class='dropdown-header'>Launcher description</li>
+                            <li>
+                                <a href='#'>Action</a>
+                            </li>
+                            <li>
+                                <a href='#'>Another action</a>
+                            </li>
+                            <li>
+                                <a href='#'>Something else here</a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class='launcher'>
+                        <i class='icon-bookmark'></i>
+                        <a href='#'>Aide</a>
+                    </li>
+
+                </ul>
+
+            </section>
+            <!-- Tools -->
+
+
+            <section id='tools'>
+                <ul class='breadcrumb' id='breadcrumb'>
+                    <li class='title'>Dashboard</li>
+
+                </ul>
+                <div id='toolbar'>
+                    <div class='btn-group'>
+                        <a class='btn' data-toggle='toolbar-tooltip' href='#' title='Building'>
+                            <i class='icon-building'></i>
+                        </a>
+                        <a class='btn' data-toggle='toolbar-tooltip' href='#' title='Laptop'>
+                            <i class='fa fa-laptop'></i>
+                        </a>
+                        <a class='btn' data-toggle='toolbar-tooltip' href='#' title='Calendar'>
+                            <i class='icon-calendar'></i>
+                            <span class='badge'>3</span>
+                        </a>
+                        <a class='btn' data-toggle='toolbar-tooltip' href='#' title='Lemon'>
+                            <i class='icon-lemon'></i>
+                        </a>
+                    </div>
+
+                </div>
+            </section>
+
+
+            <div id='content'>
+                <ul class="col-lg-3 nav nav-pills nav-stacked ">
+                    {% block menu %}
+                    <li id="Home" role="presentation" class="active"><a href="#">Menu</a></li>
+                    <li id="Profile" role="presentation"><a href="/reselling/">home</a></li>
+
+                    <li id="Profile" role="presentation"><a href="/reselling/">supprimer juridiction</a></li>
+
+                    <li role="presentation"><a href="#">update juridiction </a></li>
+                    <li id="Profile" role="presentation"><a href="#">autre</a></li>
+                    {% endblock %}
+                </ul>   
+
+
+                <div class="col-lg-9 jumbotron ">
+                    {% block content2 %}
+
+                    <h1 >Juridiction</h1>      
+                    <p>This page will grow as we add more and more components from Bootstrap...</p>      
+                    <div class='panel panel-default'>
+
+                        <div  id="contenu">
+                            <a  class="Chargement"> chargement</a>
+                            <a  class="loader loader-bars" href="{% url 'admin:index' %}"></a>
+
+                            <div id="pad-wrapper">
+                                <div class="row-fluid header">
+
+                                    <table id="example" class="display no-wrap dataTable responsive">
+                                        <thead>
+                                            <th>id</th>
+                                            <th>code</th>
+                                            <th>name</th>
+                                            <th>indicatif</th>
+                                            <th>type</th>
+
+                                        </thead>
+                                        <tbody>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+
+
+                        </div>
+
+                        <div class='panel-heading'>
+                            <a id="update" href="a">  <button class="btn btn-primary">Update  </button></a>
+
+                            <i class='icon-beer icon-large'></i>
+                            Hierapolis Rocks!
+                            <div class='panel-tools'>
+                                <div class='btn-group'>
+
+                                    <a class='btn' href='#'>
+                                        <i class='icon-refresh'></i>
+                                        Refresh statics
+                                    </a>
+                                    <a class='btn' data-toggle='toolbar-tooltip' href='#' title='Toggle'>
+                                        <i class='icon-chevron-down'></i>
+                                    </a>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="st-content-inner"><!-- extra div for emulating position:fixed of the menu -->
+
+
+                        </div>
+
+                        <!-- Top Navigation -->
+                    </div>
+                    {% endblock %}
+                </div>
+            </div>
+        </div>  
+    </div>
+</div>
+</div>
+</div>
+{% block extra_javascripts %}
+
+<script type="text/javascript">
+
+    var idJuridiction ; 
+
+    // partir ajax 
+
+    var editor;
+    $(document).ready(function(){
+
+        editor = new $.fn.dataTable.Editor( {
+            ajax: '{% url "reselling_list" %}',
+            table: "#example",
+            fields: [ 
+            {
+                "label": "code:",
+                "name": "code"
+            }
+                     ,
+                     {
+                         "label": "name:",
+                         "name": "name"
+                     }
+                    ]
+        } );
+        $("#example").dataTable(
+            {
+                dom: "Tfrtip",
+                "ajax":'{% url "reselling_list" %}',
+                //  "language": dt_language,
+                "responsive": true,
+                "order": [[ 0, "desc" ]],
+
+                "processing": true,
+                "serverSide": true,
+
+                "columns": [
+                    {"data": "id","visible":false},
+                    {"data": "code"},
+                    {"data": "name"},
+                    {"data": "indicatif"},
+                    {"data": "type"},
+                    ],
+                    
+
+                tableTools: {
+                    sRowSelect: "single",
+                    aButtons: [
+                        { sExtends: "editor_create", editor: editor },
+                        { sExtends: "editor_edit",   editor: editor },
+                        { sExtends: "editor_remove", editor: editor }
+                    ]
+                }
+
+            })
+
+        /*
+
+        $('a#update').hide();
+
+        $('#example tbody').on( 'click', 'tr', function () {
+            $('a#update').fadeIn();
+            $('button.btn').addClass('animated rubberBand');
+
+            idJuridiction = $('td', this).eq(0).text();
+
+
+
+            if ( $(this).hasClass('selected') ) {
+                $(this).removeClass('selected');
+            }
+            else {
+                table.$('tr.selected').removeClass('selected');
+                $(this).addClass('selected');
+            }
+            $("a#update").attr("href", idJuridiction+"/updateJuri") 
+        } );
+
+
+        $('tbody .sorting_1').hide(); */
+    });
+
+
+
+
+
+
+/*
+
+
+
+    json={
+
+        "fields": {
+            "type": "N",
+            "id ": 1,
+            "kind": "F",
+            "champs": "test"
+        }
+    }
+
+
+
+    $('.test').generateScreen(json,"{% csrf_token %}");
+ */
+</script>
+
+{% endblock %}
+
+
+
+{% endblock %}
+

@@ -1,0 +1,115 @@
+{% extends 'reselling/base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+   <style type="text/css">
+.btn-file {
+    position: relative;
+    overflow: hidden;
+}
+.btn-file input[type=file] {
+    position: absolute;
+    top: 0;
+    right: 0;
+    min-width: 100%;
+    min-height: 100%;
+    font-size: 100px;
+    text-align: right;
+    filter: alpha(opacity=0);
+    opacity: 0;
+    outline: none;
+    background: white;
+    cursor: inherit;
+    display: block;
+}
+tfoot input {
+        width: 100%;
+        padding: 3px;
+        box-sizing: border-box;
+    }
+   </style>
+  
+ 
+{% block content %}
+
+<div class="col-lg-12 panel panel-default ">
+
+    <div class="panel-heading">
+        <h3 id="nomPanel" class="panel-title"></h3> 
+    </div>
+
+    <div class="panel-body">
+        <div class="container col-lg-12">
+ 
+       
+            {% block content2 %}
+             <form method="post" action='{% url "blacklist:csv" %}' enctype="multipart/form-data">
+            {% csrf_token %}
+
+              <div style="position:relative;">
+                    <a class='btn btn-primary' href='javascript:;'>
+                        Choose File...
+                        <input type="file" style='position:absolute;z-index:2;top:0;left:0;filter: alpha(opacity=0);-ms-filter:"progid:DXImageTransform.Microsoft.Alpha(Opacity=0)";opacity:0;background-color:transparent;color:transparent;' name="myfile" size="40"  onchange='$("#upload-file-info").html($(this).val());'>
+                    </a>
+                    &nbsp;
+                    <span class='label label-info' id="upload-file-info"></span>
+                    <br><input class="btn" type="submit" name="submit" value="Upload" />
+
+            </form>
+            <h1> {{ bar }} </h1>
+            <div id="ref" class=" col-lg-12">
+                <h1 class="visible-lg  text-center">Application blacklist</h1>      
+                <h2 class="visible-xs  text-center">Application blacklist</h2>      
+                <p>......Rajouter , supprimer , modifier vos blacklist.......</p>    
+
+                <div class="col-lg-12" id="example2"></div>
+
+            </div>
+            {% endblock %}
+
+        </div> 
+    </div>
+</div>
+
+<div class="col-lg-1"></div>
+
+
+<script>
+
+    datatableSaiyan( {
+        "idsaiyan": "example2",
+        "urldata": "/reselling/jsonlistjuri/",
+        "urlrest": "/api/juridt",
+        "dom": "Tfrtip",
+        "col": "12",
+        "fields": [
+         {
+                "label": "type:",
+                "name": "type_blacklist",
+                "type": "radio"
+            },
+
+            {
+                "label": "user_id:",
+                "name": "user_id"
+            },
+            {
+                "label": "email:",
+                "name": "email"
+            }
+           ,
+
+        ]
+    }
+     )
+  
+
+</script>
+
+
+
+{% endblock %}
+
+
+
+
+

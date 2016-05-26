@@ -1,0 +1,43 @@
+{% load staticfiles %}
+
+<script type="text/javascript" src="{% static "runner/js/jsoneditor.js" %}"></script>
+<script type="text/javascript" src="{% static "runner/js/asset/ace/ace.js" %}"></script>
+<script type="text/javascript" src="{% static "runner/js//asset/jsonlint/jsonlint.js" %}"></script>
+  
+<link rel="stylesheet" type="text/css" href="{% static "runner/css/jsoneditor.css" %}">
+
+<input type="hidden" id="{{ field_id }}" name="{{ field }}" />
+<div id="jsoneditor" 
+    style="width: 800px; height: 600px;">
+</div>
+
+<script type="text/javascript">
+    JSONEDITOR_ID = 'jsoneditor';
+    STATIC_URL = '{{ STATIC_URL }}';
+    FIELD_ID = '{{ field_id }}';
+
+    JSONEDITOR = document.getElementById(JSONEDITOR_ID);
+    FIELD = document.getElementById(FIELD_ID);
+    INITIAL_JSON = {% if value %}{{ value|safe }}{% else %}""{% endif %};
+    FIELD.value = JSON.stringify(INITIAL_JSON);
+
+    function updateHidden() {
+         var json = editor.get();
+         FIELD.value = JSON.stringify(json);
+         console.log(FIELD.value);
+         console.log(json);
+    }
+
+    options = {
+        'change': updateHidden,
+        mode: 'text',
+        modes: ['text', 'tree'],
+        error: function (err) {
+            alert(err.toString());
+        }
+    };
+
+    
+    editor = new JSONEditor(JSONEDITOR,options,FIELD.value);
+    editor.set(INITIAL_JSON);
+</script>

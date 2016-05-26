@@ -1,0 +1,25 @@
+# -*- coding: utf-8 -*-
+"""
+Author: tony payet
+
+Copyright: Nerim, 2015
+"""
+from __future__ import unicode_literals
+from django.contrib.auth.decorators import login_required
+
+from django.conf.urls import patterns, url
+
+from blacklist.views import reselling_list  ,upload_file
+
+
+urlpatterns = patterns('',
+    url(r'^jsonlistjuri/$', login_required(reselling_list.as_view()), name='reselling_list'),
+    url(r'^csv/$', login_required(upload_file) ,name='csv'),  
+    #url(r'^blacklist/$', login_required(achats.as_view(template_name="reselling/achats.html")),name='blacklist'),
+
+
+)
+
+
+
+

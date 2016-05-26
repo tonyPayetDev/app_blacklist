@@ -1,0 +1,179 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+    
+{% block content %}
+    
+    {{ ZONE_JSONLIST|safe }}
+    
+    {% block extracss %}
+
+        <link href="{% static 'runner/datatables/extensions/TableTools/css/dataTables.tableTools.css' %}" rel="stylesheet">
+        <link href="{% static 'runner/datatables/Plugins/integration/bootstrap/3/dataTables.bootstrap.css' %}" rel="stylesheet">
+        <link href="{% static 'runner/datatables/Plugins/integration/bootstrap/3/editor.bootstrap.css' %}" rel="stylesheet">
+    
+    {% endblock %}
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+          <table id="juri-table" class="table table-hover table-striped table-bordered" cellspacing="0" width="100%">
+            <thead>
+              <tr>
+                <th>id</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Indicatif</th>
+                <th>Kind</th>
+                <th>Zone</th>
+                <th>ZoneChoice</th>
+                <th>ZoneList</th>
+                <th>Bizzone</th>
+              </tr>
+            </thead>
+          </table>
+        </div>
+    </div>
+    
+    {% block extrajs %}
+
+
+        <script src="{% static 'runner/datatables/media/js/jquery.dataTables.js' %}"></script>
+        <script src="{% static 'runner/datatables/extensions/TableTools/js/dataTables.tableTools.js' %}"></script>
+        <script src="{% static 'runner/datatables/editor/js/dataTables.editor.js' %}"></script>
+        <script src="{% static 'runner/datatables/Plugins/integration/bootstrap/3/dataTables.bootstrap.js' %}"></script>
+        <script src="{% static 'runner/datatables/Plugins/integration/bootstrap/3/editor.bootstrap.js' %}"></script>
+
+
+        <script type="text/javascript">
+        
+            $(document).ready(function()
+            {
+                c = "{{ ZONE_JSONLIST|safe}}"
+                console.log(c)
+                
+                //CSRF
+                $.ajaxSetup({
+                    beforeSend: function(xhr, settings) 
+                    {
+                       xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+                       console.log(xhr);
+                    }
+                });
+                
+                function getCookie(name) 
+                {
+                    var cookieValue = null;
+                    if (document.cookie && document.cookie != '') 
+                    {
+                        var cookies = document.cookie.split(';');
+                        for (var i = 0; i < cookies.length; i++) 
+                        {
+                            var cookie = jQuery.trim(cookies[i]);
+                            
+                            // Does this cookie string begin with the name we want?
+                            if (cookie.substring(0, name.length + 1) == (name + '=')) 
+                            {
+                                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                                    break;
+                            }
+                        }
+                    }
+                    return cookieValue;
+                }
+                
+                /* TODO : Faire une fonction generique des listes de choix */
+                /*
+                function getZoneList() 
+                {
+                    var aList = new Array();
+                   
+                    $.ajax(
+                    {
+                        url: "http://{{login}}:{{password}}@{{runner_service}}/choices/",
+                        data : JSON.stringify("{'choice':'typebizone'}"),
+                        contentType: 'application/json; charset=utf-8',
+                        type: "POST", 
+                        async: false,
+                        dataType: 'json',
+                        success: function (json) 
+                        {
+                            for (var i = 0; i < json.length; i++) 
+                            {
+                                aList[i] = { "label": json[i]['label'], "value": json[i]['value'] };
+                            }
+                 
+                        },
+                        error: function (json) { }
+                        
+                    });
+            
+                    return aList;
+                }
+                */
+                
+                var some_data=1;
+                
+                oeditor = new $.fn.dataTable.Editor( 
+                {
+                    table: "#juri-table",
+                    idSrc: "id", 
+                    ajax : "{% url 'valo:juritest' %}",
+                    
+                    fields: [ 
+                        {
+                            label: "Code:",
+                            name: "code"
+                        }, 
+                        {
+                            label: "Name:",
+                            name: "name"
+                        },
+                        /*
+                        {
+                        label: "Zone:",
+                            name: "zone_choice",
+                            type : "select",
+                            "ipOpts": getZoneList()
+                            
+                        }
+                        */
+                    ]
+                } );
+        
+                var oTable = $('#juri-table').dataTable( 
+                {
+                    "sDom": "<'row'<'col-xs-6'T><'col-xs-6'f>r>t<'row'<'col-xs-6'i><'col-xs-6'p>>",
+                    "bProcessing": true,
+                    "bServerSide": true,
+                    "sAjaxSource": "{% url 'juridiction_list_json' %}",
+
+                    "columns": [
+                        {"data": "id","visible":true},
+                        {"data": "code"},
+                        {"data": "name"},
+                        {"data": "indicatif"},
+                        {"data": "kind"},
+                        {"data": "zone"},
+                        {"data": "zone_choice","visible":true},
+                        {"data": "zone_list","visible":true},
+                        {"data": "bizzone"},
+                        
+                        ],
+                    
+                    "tableTools": 
+                    {
+                        sRowSelect: "single",
+                        aButtons: [
+                            { sExtends: "editor_create", editor: oeditor },
+                            { sExtends: "editor_edit",   editor: oeditor },
+                            { sExtends: "editor_remove", editor: oeditor }
+                        ]
+                    },
+                } );
+            
+            });
+            
+        </script>
+    
+    {% endblock %}
+    
+{% endblock %}

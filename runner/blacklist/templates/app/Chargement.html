@@ -1,0 +1,73 @@
+<div class="container col-lg-10" id='wrapper'>
+
+    <section id='sidebar'>
+        {% block sidebar %}
+
+        <i class='icon-align-justify icon-large' id='toggle'></i>
+                      <div class="zoom">
+
+  <img class="nerimLogo" src="http://www.nerim.fr/go/ultra-haut-debit/images/logo_nerim.png" alt="pensées de Giverny" />
+
+</div>
+              
+        <ul id='dock'>
+
+     
+           
+            <li id="dash" class='launcher active '>
+                <i class='fa fa-tachometer'></i>
+                <a href='{% url "dash" %}'>dashboard</a>
+
+            </li>
+            <li id="achats" class='launcher '>
+                <i class='fa fa-cart-plus'></i>
+                <a href='{% url "achats" %}'>achats</a>
+
+            </li>
+            <li class='launcher'>
+                <i class='fa fa-cart-arrow-down '></i>
+                <a href="tables.html">Ventes</a>
+            </li>
+            <li class='launcher dropdown hover'>
+                <i class='fa fa-exclamation-triangle'></i>
+                <a href='#'>Travaux</a>
+            </li>
+            <li class='launcher'>
+                <i class='fa fa-gears '></i>
+                <a href='#'>Config</a>
+            </li>
+            <li class='launcher'>
+                <i class='fa fa-exclamation '></i>
+                <a href='#'>Aide</a>
+            </li>
+
+        </ul>
+        {% endblock %}
+
+    </section>
+
+
+
+    <section class="row">
+        <ul class="breadcrumb" id="">
+            <li class="title">Dashboard</li>
+
+        </ul>
+        <div id="toolbar">
+            <div class="tClass btn-group">
+
+                <a  class=" loader loader-bars" href="{% url 'admin:index' %}"></a>
+
+
+            </div>
+
+        </div>
+    </section>
+    <div id='content'>
+        {% block content %}
+
+
+        {% endblock %}
+
+    </div>  
+</div>

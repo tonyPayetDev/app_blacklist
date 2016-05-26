@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load i18n %}
+{% load staticfiles %}
+{% load imagekit %}
+
+{% block title %}BigRoot Runner Admin{% endblock %}
+
+{% block content %}
+    <div class="row clearfix">
+        <div class="col-md-8 column">
+            <div class="jumbotron">
+                <div class="container">
+                    <h1>
+                        Bienvenue !
+                    </h1>
+                    <p>      
+                        (BigRoot) Interface unique de l'administration de Runner.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4 column">
+            <img src="{% static "runner/img/nerim_logo.jpg" %}" alt="logo" width="280"/>
+        </div>
+    </div>
+    
+{% endblock %}
