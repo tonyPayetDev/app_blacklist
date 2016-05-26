@@ -2,7 +2,11 @@
 
 creer environnement virtuel avec virtualenvs
 
-pip install -r new_requirements.txt
+mkvirtualenv blacklist
+
+workon blacklist
+
+pip install -r requirements_new.txt
 
 python manage.py syncdb
 
