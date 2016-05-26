@@ -6,7 +6,7 @@ mkvirtualenv blacklist
 
 workon blacklist
 
-pip install -r requirements_new.txt
+pip install -r requirements_news.txt
 
 python manage.py syncdb
 
